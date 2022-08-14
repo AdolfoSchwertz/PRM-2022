@@ -6,7 +6,7 @@ import { AppDataSource } from './data-source';
 const app = express(); 
 
 //Determina a porta de execução
-const PORT = 3300;
+const PORT = 3306;
 
 //Middleware
 app.use(cors());
