@@ -18,15 +18,11 @@ AppDataSource.initialize()
 
     app.listen(PORT, () => {
         console.log(`Running in port ${PORT}`);
-    })
+    });
 
    })
 
-   .catch(error => {
-    console.log('Ops, ocorreu um erro');
-    console.error(error)
-   })
-
-app.listen(PORT, () => {
-    console.log(`Running in port ${PORT}`);
-})
+.catch(error => {
+console.log('Ops, ocorreu um erro');
+console.error(error);
+});
