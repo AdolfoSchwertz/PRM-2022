@@ -1,5 +1,5 @@
 {
-  "name": "loja-backend",
+  "name": "service-account",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -10,12 +10,11 @@
     "@fluentui/react": "^8.93.0",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
     "express": "^4.18.1",
-    "mysql2": "^2.3.3",
+    "firebase": "^9.9.3",
     "react-router-dom": "^6.3.0",
-    "reflect-metadata": "^0.1.13",
-    "sass": "^1.54.6",
-    "typeorm": "^0.3.7"
+    "sass": "^1.54.6"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
