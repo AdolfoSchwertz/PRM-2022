@@ -8,6 +8,10 @@ const api = axios.create({
 
 //Endpoint dos servicos
 const _ACCOUNT = '/account/admin';
+const _BACKOFFICE = '/backoffice';
+
+//Brand
+const listBrands = () => (api.get(`${_BACKOFFICE}/brands`));
 
 
 //Account
@@ -30,4 +34,6 @@ const signInAdmin = async (credential: ICredential) => {
 
 }
 
-export {signInAdmin}
+export {
+    listBrands,
+    signInAdmin}

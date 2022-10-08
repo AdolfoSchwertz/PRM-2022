@@ -1,6 +1,8 @@
 import {Router} from 'express'
 import BrandController from './controller/BrandController'
 import CategoryController from './controller/CategoryController';
+import CustomerController from './controller/CustomerController';
+import OrderController from './controller/OrderController';
 import ProductController from './controller/ProductController';
 
 //instancio o router do express
@@ -39,5 +41,26 @@ routes.route('/products/:id')
     .get(ProductController.show)
     .put(ProductController.update)
     .delete(ProductController.remove);
+
+//rotas da order - endpoint 1
+routes.route('/orders')
+    .get(OrderController.index)
+    .post(OrderController.create);
+
+routes.route('/orders/:id')
+    .get(OrderController.show)
+    .put(OrderController.canceled)
+
+
+//rotas da customers - endpoint 1
+routes.route('/customers')
+    .get(CustomerController.index)
+    .post(CustomerController.create);
+
+
+routes.route('/customers/:id')
+    .get(CustomerController.show)
+    .put(CustomerController.update)
+    .delete(CustomerController.remove);
 
 export default routes
