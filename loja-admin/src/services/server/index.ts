@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { ICredential } from "@typesCustom";
+import { IBrand, ICredential } from "@typesCustom";
 
 
 const api = axios.create({
@@ -12,6 +12,8 @@ const _BACKOFFICE = '/backoffice';
 
 //Brand
 const listBrands = () => (api.get(`${_BACKOFFICE}/brands`));
+const createBrand = (brand: IBrand) => (api.post(`${_BACKOFFICE}/brands`, brand))
+
 
 
 //Account
@@ -36,4 +38,5 @@ const signInAdmin = async (credential: ICredential) => {
 
 export {
     listBrands,
+    createBrand,
     signInAdmin}

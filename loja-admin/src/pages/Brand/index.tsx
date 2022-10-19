@@ -1,9 +1,10 @@
 import { ColumnActionsMode, IColumn, Panel, PanelType, SelectionMode, ShimmeredDetailsList, Stack, TextField } from "@fluentui/react";
 import { IBrand } from "@typesCustom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { PageToolBar } from "../../components/PageToolBar";
 import { MessageBarCustom } from "../../components/MessageBarCustom";
-import { listBrands } from "../../services/server";
+import { createBrand, listBrands } from "../../services/server";
+import { PanelFooterContent } from "../../components/PanelFooterContent";
 
 
 export function BrandPage() {
@@ -36,6 +37,15 @@ export function BrandPage() {
         }
     ]
 
+    //Renderizar barra de botoes no panel
+    const onRenderFooterContent = (): JSX.Element => (
+        <PanelFooterContent
+            id={brand.id as number}
+            loading={loading}
+            onConfirm={handleConfirmSave}
+            onDismiss={()=> setOpenPanel(false)} />
+    );
+
     useEffect(()=> {
 
         listBrands()
@@ -66,6 +76,26 @@ export function BrandPage() {
         
         setOpenPanel(true);
     }
+
+    async function handleConfirmSave() {
+        
+        createBrand(brand)
+           .then(result =>{
+            setBrands([...brands, result.data])
+
+           })
+           .catch(error => {
+                setMessageError(error.message);
+                setInterval(()=>{
+                    handleDemissMessageBar();
+                }, 10000);
+        
+            })
+            .finally(() => {
+                setOpenPanel(false)
+            })
+
+
 
     return (
         <div id="brand-page" className="main-content">
@@ -98,7 +128,8 @@ export function BrandPage() {
                 type={PanelType.medium}
                 headerText="Cadastro de Marca"
                 isFooterAtBottom={true}
-                onDismiss={() => setOpenPanel(false)}>
+                onDismiss={() => setOpenPanel(false)}
+                onRenderFooterContent={onRenderFooterContent}>
 
                 <p>Preencha TODOS os campos obrigatórios identificados por <span className="required">*</span></p>
 
@@ -116,4 +147,4 @@ export function BrandPage() {
 
     )
 
-}
+    }}
