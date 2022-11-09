@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import { IUser, ICredential } from '@typesCustom';
+import { IUser } from '@typesCustom';
 import {FirebaseError, signInAdmin} from '../services/firebase'
 
 class AuthController{

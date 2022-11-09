@@ -3,8 +3,9 @@ import { IBrand } from "@typesCustom";
 import { useCallback, useEffect, useState } from "react";
 import { PageToolBar } from "../../components/PageToolBar";
 import { MessageBarCustom } from "../../components/MessageBarCustom";
-import { createBrand, listBrands } from "../../services/server";
+import { createBrand, deleteBrand, listBrands, updateBrand } from "../../services/server";
 import { PanelFooterContent } from "../../components/PanelFooterContent";
+import { DetailsListOptions } from "../../components/DetailsListOptions";
 
 
 export function BrandPage() {
@@ -34,6 +35,18 @@ export function BrandPage() {
             isResizable: false,
             columnActionsMode: ColumnActionsMode.disabled
 
+        }, {
+            key: 'option',
+            name: 'Opções',
+            minWidth: 60,
+            maxWidth: 60,
+            isResizable: false,
+            columnActionsMode: ColumnActionsMode.disabled,
+            onRender: (item: IBrand) => (
+                <DetailsListOptions
+                    onEdit={() => handleEdit(item)}
+                    onDelete={() => handleDelete(item)} />
+            )
         }
     ]
 
@@ -76,24 +89,66 @@ export function BrandPage() {
         
         setOpenPanel(true);
     }
+    function handleEdit(data: IBrand) {
+        setBrand( data );
+        setOpenPanel(true);
+    }
 
-    async function handleConfirmSave() {
-        
-        createBrand(brand)
-           .then(result =>{
-            setBrands([...brands, result.data])
+    function handleDelete(data: IBrand) {console.log(data)
+        deleteBrand(data)
+            .then(() => {
+                const filtered = brands.filter(item => (item.id !== data.id));
+            
+                setBrands([...filtered]);
 
-           })
-           .catch(error => {
-                setMessageError(error.message);
-                setInterval(()=>{
+                setMessageSuccess('Registro excluído com sucesso!');
+
+                setTimeout(() => {
+                    setMessageSuccess('');
+                }, 5000);
+            })
+            .catch(error => {
+                setMessageError((error as Error).message);
+                setTimeout(() => {
                     handleDemissMessageBar();
                 }, 10000);
-        
-            })
-            .finally(() => {
-                setOpenPanel(false)
-            })
+            });
+    }
+
+    async function handleConfirmSave() {
+
+        let result = null;
+
+        try {
+
+            if (brand.id) {
+                result = await updateBrand(brand);
+            } else {
+                result = await createBrand(brand);
+            }
+
+            const filtered = brands.filter(item => (item.id !== brand.id));
+
+            setBrands([...filtered, result.data])
+
+            setMessageSuccess('Registro salvo com sucesso!')
+
+            setTimeout(() => {
+                setMessageSuccess('');
+            }, 5000);
+
+        } catch (error) {
+
+            setMessageError((error as Error).message);
+            setTimeout(() => {
+                handleDemissMessageBar();
+            }, 10000);
+
+        } finally{
+                setOpenPanel(false);
+        }
+
+    }
 
 
 
@@ -113,12 +168,12 @@ export function BrandPage() {
 
                 <div className="data-list">
                     <ShimmeredDetailsList
-                        items={brands}
+                        items={brands.sort((a,b) => a.name > b.name ? 1 : -1)}
                         columns={columns}
                         setKey="set"
                         enableShimmer={loading}
                         selectionMode={SelectionMode.none} />
-                </div> 
+                </div>
             </Stack>
 
             <Panel
@@ -140,11 +195,10 @@ export function BrandPage() {
                         value={brand.name}
                         onChange={event => setBrand({...brand, name: (event.target as HTMLInputElement).value})} />
                 </Stack>
-                {JSON.stringify(brand)}
             </Panel>
             
         </div>
 
     )
 
-    }}
+    }
